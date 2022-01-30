@@ -1,4 +1,7 @@
-﻿namespace XIVSlothComboPlugin.Combos
+﻿using Dalamud.Game.ClientState.JobGauge.Enums;
+using Dalamud.Game.ClientState.JobGauge.Types;
+
+namespace XIVSlothComboPlugin.Combos
 {
     internal static class SGE
     {
@@ -25,6 +28,8 @@
             EukrasianDosis1 = 24293,
             EukrasianDosis2 = 24308,
             EukrasianDosis3 = 24314,
+            Toxicon = 24304,
+            Toxicon2 = 24316,
             // Other
             Swiftcast = 7561,
             LucidDreaming = 7562;
@@ -54,9 +59,11 @@
                 Kerachole = 50,
                 Taurochole = 62,
                 Ixochole = 52,
+                Toxicon = 66,
                 Dosis2 = 72,
                 Holos = 76,
                 Rizomata = 74,
+                Toxicon2 = 82,
                 Dosis3 = 82;
         }
     }
@@ -85,24 +92,54 @@
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            if(actionID == SGE.Phlegma)
+            if (actionID == SGE.Phlegma || actionID == SGE.Phlegmara || actionID == SGE.Phlegmaga)
             {
+                var lucidDreaming2 = GetCooldown(SGE.LucidDreaming);
+                if (!lucidDreaming2.IsCooldown && LocalPlayer.CurrentMp <= 8000)
+                {
+                    return SGE.LucidDreaming;
+                }
+
                 if (level >= SGE.Levels.Dosis3)
                 {
                     if (GetCooldown(SGE.Phlegmaga).CooldownRemaining > 45)
+                    {
+                        var dgauge = GetJobGauge<SGEGauge>();
+                        if (dgauge.Addersting >= 1)
+                        {
+                            return SGE.Toxicon2;
+                        }
+
                         return SGE.Dyskrasia2;
+                    }
                 }
 
                 if (level >= SGE.Levels.Dosis2)
                 {
                     if (GetCooldown(SGE.Phlegmara).CooldownRemaining > 45)
+                    {
+                        var dgauge = GetJobGauge<SGEGauge>();
+                        if (dgauge.Addersting >= 1)
+                        {
+                            return SGE.Toxicon;
+                        }
                         return SGE.Dyskrasia;
+                    }
                 }
 
                 if (GetCooldown(SGE.Phlegma).CooldownRemaining > 45)
+                {
+                    if (level >= SGE.Levels.Toxicon)
+                    {
+                        var dgauge = GetJobGauge<SGEGauge>();
+                        if (dgauge.Addersting >= 1)
+                        {
+                            return SGE.Toxicon;
+                        }
+                    }
                     return SGE.Dyskrasia;
+                }
             }
-
             return actionID;
         }
     }
@@ -190,23 +227,35 @@
                 var dosis1Debuff = FindTargetEffect(SGE.Debuffs.EukrasianDosis1);
                 var dosis2Debuff = FindTargetEffect(SGE.Debuffs.EukrasianDosis2);
                 var dosis3Debuff = FindTargetEffect(SGE.Debuffs.EukrasianDosis3);
-                var MaxHpValue = Service.Configuration.EnemyHealthMaxHp;
-                var PercentageHpValue = Service.Configuration.EnemyHealthPercentage;
-                var CurrentHpValue = Service.Configuration.EnemyCurrentHp;
+                var isAdd = 0;
+                var isBoss = 0;
 
-                if (IsEnabled(CustomComboPreset.SageDPSFeatureTest) && level >= 82 && incombat)
+
+                if (EnemyHealthPercentage() >= 10 && EnemyHealthMaxHp() < 550000)
+                {
+                    isAdd = 1;
+                    isBoss = 0;
+                }
+
+                if (EnemyHealthMaxHp() >= 600000 && EnemyHealthPercentage() >= 1)
+                {
+                    isBoss = 1;
+                    isAdd = 0;
+                }
+
+                if (IsEnabled(CustomComboPreset.SageDPSFeatureTest) && level >= 82 && incombat && (isAdd == 1 || isBoss == 1))
                 {
                     if (HasEffect(SGE.Buffs.Eukrasia))
                         return SGE.EukrasianDosis3;
-                    if ((dosis3Debuff is null && EnemyHealthMaxHp() > MaxHpValue && EnemyHealthPercentage() > PercentageHpValue) || ((dosis3Debuff.RemainingTime <= 3) && EnemyHealthPercentage() > PercentageHpValue && EnemyHealthCurrentHp() > CurrentHpValue))
+                    if ((dosis3Debuff is null) || (dosis3Debuff.RemainingTime <= 4))
                         return SGE.Eukrasia;
                 }
 
-                if (IsEnabled(CustomComboPreset.SageDPSFeatureTest) && level >= 72 && level <= 81 && incombat)
+                if (IsEnabled(CustomComboPreset.SageDPSFeatureTest) && level >= 72 && level <= 81 && incombat && ((EnemyHealthPercentage() >= 10 && EnemyHealthMaxHp() < 550000) || (EnemyHealthMaxHp() >= 600000 && EnemyHealthPercentage() >= 1)))
                 {
                     if (HasEffect(SGE.Buffs.Eukrasia))
                         return SGE.EukrasianDosis2;
-                    if ((dosis2Debuff is null && EnemyHealthMaxHp() > MaxHpValue && EnemyHealthPercentage() > PercentageHpValue) || ((dosis2Debuff.RemainingTime <= 3) && EnemyHealthPercentage() > PercentageHpValue && EnemyHealthCurrentHp() > CurrentHpValue))
+                    if ((dosis2Debuff is null) || (dosis2Debuff.RemainingTime <= 4))
                         return SGE.Eukrasia;
                 }
 
@@ -214,10 +263,10 @@
                 {
                     if (HasEffect(SGE.Buffs.Eukrasia))
                         return SGE.EukrasianDosis1;
-                    if ((dosis1Debuff is null && EnemyHealthMaxHp() > MaxHpValue && EnemyHealthPercentage() > PercentageHpValue) || ((dosis1Debuff.RemainingTime <= 3) && EnemyHealthPercentage() > PercentageHpValue && EnemyHealthCurrentHp() > CurrentHpValue))
+                    if ((dosis1Debuff is null) || (dosis1Debuff.RemainingTime <= 4))
                         return SGE.Eukrasia;
                 }
-                if (IsEnabled(CustomComboPreset.SageLucidFeature))
+                if (IsEnabled(CustomComboPreset.SageDPSFeatureTest))
                 {
                     var lucidDreaming = GetCooldown(SGE.LucidDreaming);
                     var actionIDCD = GetCooldown(actionID);

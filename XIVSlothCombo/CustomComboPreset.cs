@@ -346,12 +346,8 @@ namespace XIVSlothComboPlugin
         [CustomComboInfo("Overcap Feature Option", "Adds SaberBlade to Cascade/Windmill if you have at least 50 esprit.", DNC.JobID)]
         DancerSaberDanceInstantSaberDanceComboFeature = 4008,
 
-        [ConflictingCombos(DancerDanceComboCompatibility, DancerDanceStepCombo)]
-        [CustomComboInfo("CombinedDanceFeature", "Standard And Technical Dance on one button(StandardStep) Standard>Technical This is combo out into Tilana and StarfallDance.", DNC.JobID)]
+        [CustomComboInfo("Standard Step Enhanced", "Puts Starfall Dance and Tillana on Standard Step.", DNC.JobID)]
         DancerDanceStepComboTest = 4009,
-
-        [CustomComboInfo("FanSaberDanceFeature", "Adds SaberDance onto all FanDance Skills when no feathers are available and you have 50+ gauge", DNC.JobID)]
-        DancerSaberFanDanceFeature = 4010,
 
         [ParentCombo(DancerSingleTargetMultibutton)]
         [CustomComboInfo("FanDance On Cascade Feature", "Adds FanDance 1/3/4 Onto Cascade When available", DNC.JobID)]
@@ -1022,101 +1018,26 @@ namespace XIVSlothComboPlugin
         // ====================================================================================
         #region SUMMONER
 
-
-        [ConflictingCombos(SummonerMainComboFeature, SummonerRuinIVMobilityFeature)]
-        [CustomComboInfo("Enable Single Target (Ruin1)", "Enables changing Single-Target Combo (Ruin I).", SMN.JobID)]
-        SummonerMainComboFeatureRuin1 = 16999,
-
-        [ConflictingCombos(SummonerMainComboFeatureRuin1)]
-        [CustomComboInfo("Enable Single Target (RuinIII)", "Enables changing Single-Target Combo (Ruin III).", SMN.JobID)]
-        SummonerMainComboFeature = 17000,
-
-        [CustomComboInfo("Enable AOE", "Enables changing AOE Combo (Tri-Disaster)", SMN.JobID)]
-        SummonerAOEComboFeature = 17001,
-
-        [CustomComboInfo("Single Target Demi Feature", "Replaces Astral Impulse/Fountain of Fire with Enkindle/Deathflare/Rekindle when appropriate.", SMN.JobID)]
-        SummonerSingleTargetDemiFeature = 17002,
-
-        [ParentCombo(SummonerAOEComboFeature)]
-        [CustomComboInfo("AOE Demi Feature", "Replaces Astral Flare/Brand of Purgatory with Enkindle/Deathflare/Rekindle when appropriate.", SMN.JobID)]
-        SummonerAOEDemiFeature = 17003,
-
-        [CustomComboInfo("Egi Attacks Feature", "Replaces RuinI/Ruin III (Depending On Enabeled Combo) and Tri-Disaster with Egi attacks. Will not work without enabling Single Target and/or AOE.", SMN.JobID)]
-        SummonerEgiAttacksFeature = 17004,
-
-        [CustomComboInfo("Garuda Slipstream Feature", "Adds Slipstream on RuinI/Ruin III/Tri-disaster.", SMN.JobID)]
-        SummonerGarudaUniqueFeature = 17005,
-
-        [CustomComboInfo("Ifrit Cyclone Feature", "Adds Crimson Cyclone/Crimson Strike on RuinI/Ruin III/Tri-disaster.", SMN.JobID)]
-        SummonerIfritUniqueFeature = 17006,
-
-        [CustomComboInfo("Titan Mountain Buster Feature", "Adds Mountain Buster on RuinI/Ruin III/Tri-disaster.", SMN.JobID)]
-        SummonerTitanUniqueFeature = 17007,
-
         [CustomComboInfo("ED Fester", "Change Fester into Energy Drain when our of Aetherflow stacks.", SMN.JobID)]
-        SummonerEDFesterCombo = 17008,
+        SummonerEDFesterCombo = 17000,
 
         [CustomComboInfo("ES Painflare", "Change Painflare into Energy Siphon when out of Aetherflow stacks.", SMN.JobID)]
-        SummonerESPainflareCombo = 17009,
+        SummonerESPainflareCombo = 17001,
 
-        // BONUS TWEAKS
-        [CustomComboInfo("Carbuncle Reminder Feature", "Reminds you always to summon Carbuncle by replacing Ruin (Carbuncle Summon Reminder Feature).", SMN.JobID)]
-        SummonerCarbuncleSummonFeature = 17010,
+        [CustomComboInfo("Enkindle/Summon Switch", "When Bahamut/Phoenix are summoned, Enkindle Bahamut/Phoenix will replace Summon Bahamut/Phoenix", SMN.JobID)]
+        SummonerEnkindleFeature = 17002,
 
-        [CustomComboInfo("Ruin 4 On Ruin3 Combo Feature", "Adds Ruin4 on main RuinI/RuinIII combo feature when there are currently no summons being active.", SMN.JobID)]
-        SummonerRuin4ToRuin3Feature = 17011,
+        [CustomComboInfo("Tri-Disaster into Primal Aoes", "Turns Tri-Disaster into Ifrit/Titan/Garuda's AoE while they are attuned. Includes Level Sync logic.", SMN.JobID)]
+        TriDisasterCombo = 17003,
 
-        [CustomComboInfo("Ruin 4 On Tri-disaster Feature", "Adds Ruin4 on main Tridisaster combo feature when there are currently no summons being active.", SMN.JobID)]
-        SummonerRuin4ToTridisasterFeature = 17012,
+        [CustomComboInfo("Ruin into Primal Single Target", "Turns Ruin 3/1 into Ifrit/Titan/Garuda's Single Target while they are attuned. Includes Level Sync logic.", SMN.JobID)]
+        RuinPrimalCombo = 17004,
 
-        [ParentCombo(SummonerEDFesterCombo)]
-        [CustomComboInfo("Ruin IV Fester/PainFlare Feature", "Change Fester/PainFlare into Ruin IV when out of Aetherflow stacks, ED/ES is on cooldown, and Ruin IV is up.", SMN.JobID)]
-        SummonerFesterPainflareRuinFeature = 17013,
+        [CustomComboInfo("Summon Cycle", "When Bahamut/Phoenix is not ready, Cycles Titan -> Garuda -> Ifrit. Includes Level Sync logic.", SMN.JobID)]
+        SummonMegaButton = 17005,
 
-        [ParentCombo(SummonerEDFesterCombo)]
-        [CustomComboInfo("Lazy Fester Feature", "Adds ED/Fester during (AstralImpulse).\n. Will only ED during Phoenix phase in order to save it Fester for burst in bahamut", SMN.JobID)]
-        SummonerLazyFesterFeature = 17014,
-
-        [ConflictingCombos(SimpleSummonerOption2)]
-        [CustomComboInfo("One Button Rotation Feature", "Summoner Single Target One Button Rotation (Single Target) on Ruin1/Ruin3.(Titan>Garuda>Ifrit) ", SMN.JobID)]
-        SimpleSummoner = 17015,
-
-        [CustomComboInfo("One Button AoE Rotation Feature", "Summoner AoE One Button Rotation (AoE) on Tridisaster", SMN.JobID)]
-        SimpleAoESummoner = 17016,
-
-        [ParentCombo(SimpleSummoner)]
-        [CustomComboInfo("Searing Light Rotation Option", "Adds Searing Light to Simple Summoner Rotation, Single Target", SMN.JobID)]
-        BuffOnSimpleSummoner = 17017,
-
-        [ParentCombo(SimpleAoESummoner)]
-        [CustomComboInfo("Searing Light  AoE Option", "Adds Searing Light to Simple Summoner Rotation, AoE", SMN.JobID)]
-        BuffOnSimpleAoESummoner = 17018,
-
-        [CustomComboInfo("DemiReminderFeature", "Adds Only Demi Summons on RuinIII (So you can still choose your Egis but never forget to summon Demis) ", SMN.JobID)]
-        SummonerDemiSummonsFeature = 17019,
-
-        [CustomComboInfo("DemiReminderAoEFeature", "Adds Only Demi Summons on TriDisaster (So you can still choose your Egis but never forget to summon Demis) ", SMN.JobID)]
-        SummonerDemiAoESummonsFeature = 17020,
-
-        [ConflictingCombos(SummonerMainComboFeatureRuin1)]
-        [CustomComboInfo("Ruin III mobility", "Allows you to cast Ruin III while Ruin IV is unavailable for mobility reasons. Shows up as Ruin I.\nWill break combos with Ruin I. Might break combos with Ruin IV.", SMN.JobID)]
-        SummonerRuinIVMobilityFeature = 17021,
-
-        [ConflictingCombos(SummonerSwiftcastFeatureIfrit)]
-        [CustomComboInfo("Swiftcast Garuda Option", "Always swiftcasts Slipstream if available.", SMN.JobID)]
-        SummonerSwiftcastFeatureGaruda = 17022,
-
-        [ConflictingCombos(SummonerSwiftcastFeatureGaruda)]
-        [CustomComboInfo("Swiftcast Ifrit Option", "Always swiftcasts 2nd Ruby Rite if available.", SMN.JobID)]
-        SummonerSwiftcastFeatureIfrit = 17023,
-
-        [ConflictingCombos(SimpleSummoner)]
-        [CustomComboInfo("One Button Rotation Feature Option2 ", "Same feature as One Button Rotation Feature but Garua>Titan>Ifrit .", SMN.JobID)]
-        SimpleSummonerOption2 = 17024,
-
-        [CustomComboInfo("Prevent Ruin4 Waste Feature", "Puts Ruin4 Above anything if FurtherRuin about to expire and there is no Demi present.", SMN.JobID)]
-        SummonerRuin4WastePrevention = 17025,
-
+        [CustomComboInfo("Swift Raise", "Replace Ressurrection with Swiftcast when Swiftcast is usable.", SMN.JobID)]
+        SummonerSwiftRaise = 17006,
 
         #endregion
         // ====================================================================================

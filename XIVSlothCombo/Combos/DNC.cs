@@ -301,68 +301,17 @@ namespace XIVSlothComboPlugin.Combos
         {
             if (actionID == DNC.StandardStep)
             {
-                var gauge = GetJobGauge<DNCGauge>();
-                var standardCD = GetCooldown(DNC.StandardStep);
-                var techstepCD = GetCooldown(DNC.TechnicalStep);
-                var devilmentCD = GetCooldown(DNC.Devilment);
-                var flourishCD = GetCooldown(DNC.Flourish);
-                var incombat = HasCondition(Dalamud.Game.ClientState.Conditions.ConditionFlag.InCombat);
 
-                if (IsEnabled(CustomComboPreset.DancerDevilmentOnCombinedDanceFeature))
-                {
-                    if (level >= 62 && level <= 69 && standardCD.IsCooldown && !devilmentCD.IsCooldown && !gauge.IsDancing)
-                        return DNC.Devilment;
-                    if (level >= 70 && standardCD.IsCooldown && techstepCD.IsCooldown && !devilmentCD.IsCooldown && !gauge.IsDancing)
-                        return DNC.Devilment;
-                }
-                if (IsEnabled(CustomComboPreset.DancerFlourishOnCombinedDanceFeature) && !gauge.IsDancing && !flourishCD.IsCooldown && incombat && level >= 72 && standardCD.IsCooldown)
-                {
-                    return DNC.Flourish;
-                }
                 if (HasEffect(DNC.Buffs.FlourishingStarfall))
                 {
                     return DNC.StarfallDance;
                 }
-                if (HasEffect(DNC.Buffs.FlourishingFinish))
+
+                if (HasEffect(DNC.Buffs.FlourishingFinish) && !HasEffect(DNC.Buffs.FlourishingStarfall))
                 {
                     return DNC.Tillana;
                 }
-                if (standardCD.IsCooldown && !techstepCD.IsCooldown && !gauge.IsDancing && !HasEffect(DNC.Buffs.StandardStep))
-                {
-                    return DNC.TechnicalStep;
-                }
-                if (gauge.IsDancing && HasEffect(DNC.Buffs.StandardStep))
-                {
-                    if (gauge.CompletedSteps < 2)
-                        return (uint)gauge.NextStep;
-
-                    return DNC.StandardFinish2;
-                }
-                if (gauge.IsDancing && HasEffect(DNC.Buffs.TechnicalStep))
-                {
-                    if (gauge.CompletedSteps < 4)
-                        return (uint)gauge.NextStep;
-
-                    return DNC.TechnicalFinish4;
-                }
-
             }
-            return actionID;
-        }
-    }
-    internal class DancerSaberFanDanceFeature : CustomCombo
-    {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DancerSaberFanDanceFeature;
-
-        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-        {
-            if (actionID == DNC.FanDance1 || actionID == DNC.FanDance2 || actionID == DNC.FanDance3 || actionID == DNC.FanDance4)
-            {
-                var gauge = GetJobGauge<DNCGauge>();
-                if (gauge.Feathers == 0 && gauge.Esprit >= 50)
-                    return DNC.SaberDance;
-            }
-
             return actionID;
         }
     }

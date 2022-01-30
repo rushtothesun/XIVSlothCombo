@@ -46,7 +46,9 @@
   <ItemGroup>
     <PackageReference Include="DalamudLinter" Version="1.0.3" />
     <PackageReference Include="DalamudPackager" Version="2.1.5" />
-	  <ProjectReference Include="..\lib\FFXIVClientStructs\FFXIVClientStructs\FFXIVClientStructs.csproj" />
+	  <Reference Include="FFXIVClientStructs">
+	    <HintPath>..\FFXIVClientStructs\bin\Debug\FFXIVClientStructs.dll</HintPath>
+	  </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>$(DalamudLibPath)Newtonsoft.Json.dll</HintPath>
       <Private>False</Private>
