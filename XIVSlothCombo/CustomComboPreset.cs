@@ -417,6 +417,9 @@ namespace XIVSlothComboPlugin
         [CustomComboInfo("Unmend Uptime Feature", "Replace Souleater Combo Feature with Unmend when you are out of range.", DRK.JobID)]
         DarkRangedUptimeFeature = 5011,
 
+        [CustomComboInfo("Interrupt Feature", "Replaces LowBlow with Interject when target can be interrupted .", DRK.JobID)]
+        DarkKnightInterruptFeature = 5012,
+
         #endregion
         // ====================================================================================
         #region DRAGOON
@@ -505,6 +508,9 @@ namespace XIVSlothComboPlugin
         [CustomComboInfo("Lightning Shot Uptime", "Replace Solid Barrel Combo Feature with Lightning Shot when you are out of range.", GNB.JobID)]
         GunbreakerRangedUptimeFeature = 7015,
 
+        [CustomComboInfo("Interrupt Feature", "Replaces LowBlow with Interject when target can be interrupted .", GNB.JobID)]
+        GunbreakerInterruptFeature = 7016,
+
         #endregion
         // ====================================================================================
         #region MACHINIST
@@ -583,6 +589,9 @@ namespace XIVSlothComboPlugin
         [CustomComboInfo("Monk Bootshine Feature", "Replaces Dragon Kick with Bootshine if both a form and Leaden Fist are up.", MNK.JobID)]
         MnkBootshineFeature = 9001,
 
+        [CustomComboInfo("Monk Twin Snakes Feature", "Replaces True Strike with Twin Snakes if Disciplined Fist is not applied or is less than 6 seconds from falling off.", MNK.JobID)]
+        MnkTwinSnakesFeature = 9011,
+
         [ConflictingCombos(MnkBasicComboPlus)]
         [CustomComboInfo("Monk Basic Rotation", "Basic Monk Combo on one button", MNK.JobID)]
         MnkBasicCombo = 9002,
@@ -603,15 +612,27 @@ namespace XIVSlothComboPlugin
         [CustomComboInfo("Perfect Balance Feature Plus", "All of the (Optimal?) Blitz combos on Masterfull Bliz when Perfect Balance Is Active", MNK.JobID)]
         MnkPerfectBalancePlus = 9007,
 
+        [ParentCombo(MnkBasicComboPlus)]
         [CustomComboInfo("MasterfullBliz To Main Combo", "Adds all of (Optimal?) Bliz combos and Masterfull Bliz on Main Combo", MNK.JobID)]
         MonkMasterfullBlizOnMainCombo = 9008,
 
+        [ParentCombo(MnkAoECombo)]
         [CustomComboInfo("MasterfullBliz To AoE Combo", "Adds all of (Optimal?) Bliz combos and Masterfull Bliz on AoE Combo.", MNK.JobID)]
         MonkMasterfullBlizOnAoECombo = 9009,
 
         [CustomComboInfo("Forbidden Chakra Feature", "Adds Forbidden Chakra/Enlightement to the Main/AoE feature combo. Testing Only for now!", MNK.JobID)]
         MonkForbiddenChakraFeature = 9010,
 
+        [CustomComboInfo("Riddle of Fire/Brotherhood Feature", "Replaces Riddle of Fire with Brotherhood when Riddle of Fire is on cooldown.", MNK.JobID)]
+        MnkRiddleOfFireBrotherhoodFeature = 9012,
+
+        [ParentCombo(MnkBasicComboPlus)]
+        [CustomComboInfo("Damage Buffs to Main Combo Feature", "Places Riddle of Fire, and Brotherhood onto the main combo when in perfect balance.", MNK.JobID)]
+        MnkMainComboBuffsFeature = 9013,
+
+        [ParentCombo(MnkBasicComboPlus)]
+        [CustomComboInfo("Riddle of Wind Main Combo Feature", "Places Riddle of Wind onto main combo after using Twin Snakes.", MNK.JobID)]
+        MnkRiddleOfWindFeature = 9014,
 
         #endregion
         // ====================================================================================
@@ -713,6 +734,7 @@ namespace XIVSlothComboPlugin
         [CustomComboInfo("Scornful Spirits Feature", "Replace Spirits Within and Circle of Scorn with whichever is available soonest.", PLD.JobID)]
         PaladinScornfulSpiritsFeature = 11006,
 
+        [ParentCombo(PaladinRoyalAuthorityCombo)]
         [CustomComboInfo("Royal Goring Option", "Insert Goring Blade into the main combo when appropriate.\nRequires Royal Authority Combo", PLD.JobID)]
         PaladinRoyalGoringOption = 11007,
 
@@ -734,15 +756,17 @@ namespace XIVSlothComboPlugin
         [CustomComboInfo("Shield Lob Uptime Feature", "Replace Royal Authority/Rage of Halone Feature with Shield Lob when out of range.", PLD.JobID)]
         PaladinRangedUptimeFeature = 11012,
 
-        [ParentCombo(PaladinRoyalAuthorityCombo)]
+        [ParentCombo(PaladinFightOrFlightMainComboFeature)]
+        [ConflictingCombos(PaladinFightOrFlightMainComboFeatureTest)]
         [CustomComboInfo("FoF Feature", "Adds FoF onto the main combo (Testing).", PLD.JobID)]
         PaladinFightOrFlightMainComboFeature = 11013,
+
         [ParentCombo(PaladinRoyalAuthorityCombo)]
         [CustomComboInfo("Req Feature", "Adds Req onto the main combo (Testing).", PLD.JobID)]
         PaladinReqMainComboFeature = 11014,
 
         [ParentCombo(PaladinRoyalAuthorityCombo)]
-        [ConflictingCombos(PaladinAtonementFeature)]
+        [ConflictingCombos(PaladinAtonementFeature, SkillCooldownRemaining)]
         [CustomComboInfo("Atonement Drop Feature", "Drops Atonement to prevent Potency loss (Testing).", PLD.JobID)]
         PaladinAtonementTestFeature = 11015,
 
@@ -751,7 +775,18 @@ namespace XIVSlothComboPlugin
         [CustomComboInfo("Holyspirit Uptime Feature", "Replace Royal Authority/Rage of Halone Feature with HolySpirit when out of range.", PLD.JobID)]
         PaladinRangedUptimeFeature2 = 11016,
 
+        [ParentCombo(PaladinRoyalAuthorityCombo)]
+        [ConflictingCombos(PaladinRangedUptimeFeature, PaladinFightOrFlightMainComboFeature)]
+        [CustomComboInfo("FoF Feature (Custom Values) ", "Adds FoF onto the main combo (Testing). You can Input your own gcd value.", PLD.JobID)]
+        PaladinFightOrFlightMainComboFeatureTest = 11017,
 
+        [ParentCombo(PaladinRoyalAuthorityCombo)]
+        [ConflictingCombos(PaladinAtonementFeature, PaladinAtonementTestFeature)]
+        [CustomComboInfo("Atonement Drop Feature (Custom Value Test)", "Drops Atonement to prevent Potency loss when FoF is about to expire.", PLD.JobID)]
+        SkillCooldownRemaining = 11018,
+
+        [CustomComboInfo("Interrupt Feature", "Replaces LowBlow with Interject when target can be interrupted .", PLD.JobID)]
+        PaladinInterruptFeature = 11019,
 
         #endregion
         // ====================================================================================
@@ -1102,10 +1137,12 @@ namespace XIVSlothComboPlugin
         [CustomComboInfo("Tomahawk Uptime Feature", "Replace Storm's Path Combo Feature with Tomahawk when you are out of range.", WAR.JobID)]
         WARRangedUptimeFeature = 18016,
 
+        [CustomComboInfo("Interrupt Feature", "Replaces LowBlow with Interject when target can be interrupted .", WAR.JobID)]
+        WarriorInterruptFeature = 18017,
+
         #endregion
         // ====================================================================================
         #region WHITE MAGE
-
 
         [CustomComboInfo("Solace into Misery", "Replaces Afflatus Solace with Afflatus Misery when Misery is ready to be used", WHM.JobID)]
         WhiteMageSolaceMiseryFeature = 19000,
@@ -1119,8 +1156,13 @@ namespace XIVSlothComboPlugin
         [CustomComboInfo("Afflatus Feature", "Changes Cure 2 into Afflatus Solace, and Medica into Afflatus Rapture, when lilies are up.", WHM.JobID)]
         WhiteMageAfflatusFeature = 19003,
 
+        [ConflictingCombos(WHMAlternativeRaise)]
         [CustomComboInfo("WHM Raise Feature", "Changes Swiftcast to Raise", WHM.JobID)]
         WHMRaiseFeature = 19004,
+
+        [ConflictingCombos(WHMRaiseFeature)]
+        [CustomComboInfo("WHM Raise Feature alternative", "Raise Becomes Swiftcast when Swiftcast is available. Thin air feature also applies to this if enabled.", WHM.JobID)]
+        WHMAlternativeRaise = 19015,
 
         [CustomComboInfo("DoT on Glare3 Feature", "Adds DoT on Glare3 when DoT is not preset on about to expire and when you are inCombat (You can still prepull Glare)", WHM.JobID)]
         WHMDotMainComboFeature = 19005,

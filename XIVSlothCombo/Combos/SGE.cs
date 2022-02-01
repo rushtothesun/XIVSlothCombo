@@ -202,13 +202,18 @@ namespace XIVSlothComboPlugin.Combos
         {
             if (actionID == SGE.Egeiro)
             {
+                var swiftCD = GetCooldown(SGE.Swiftcast);
+
                 if (IsEnabled(CustomComboPreset.SageEgeiroFeature))
                 {
                     if (HasEffect(SGE.Buffs.Swiftcast))
                         return SGE.Egeiro;
                 }
 
-                return OriginalHook(SGE.Swiftcast);
+                if (!swiftCD.IsCooldown)
+                {
+                    return OriginalHook(SGE.Swiftcast);
+                }
             }
 
             return actionID;

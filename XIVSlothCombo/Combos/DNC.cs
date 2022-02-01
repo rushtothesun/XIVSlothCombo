@@ -108,12 +108,6 @@ namespace XIVSlothComboPlugin.Combos
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            var gauge = GetJobGauge<DNCGauge>();
-            if (gauge.Feathers == 0)
-            {
-                if (gauge.Esprit >= 90 && level >= DNC.Levels.SaberDance && IsEnabled(CustomComboPreset.DancerOvercapFeature))
-                    return DNC.SaberDance;
-            }
             if (actionID == DNC.FanDance1)
             {
                 if (HasEffect(DNC.Buffs.FlourishingFanDance))

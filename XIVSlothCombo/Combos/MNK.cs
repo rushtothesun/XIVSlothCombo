@@ -27,6 +27,9 @@ namespace XIVSlothComboPlugin.Combos
             FlintStrike = 25882,
             RisingPhoenix = 25768,
             ShadowOfTheDestroyer = 25767,
+            RiddleOfFire = 7395,
+            RiddleOfWind = 25766,
+            Brotherhood = 7396,
             ForbiddenChakra = 3546;
 
 
@@ -38,6 +41,7 @@ namespace XIVSlothComboPlugin.Combos
                 RaptorForm = 108,
                 CoerlForm = 109,
                 PerfectBalance = 110,
+                RiddleOfFire = 1181,
                 LeadenFist = 1861,
                 FormlessFist = 2513,
                 DisciplinedFist = 3001;
@@ -80,7 +84,7 @@ namespace XIVSlothComboPlugin.Combos
             var actionIDCD = GetCooldown(OriginalHook(actionID));
             if (actionID == MNK.ArmOfTheDestroyer || actionID == MNK.ShadowOfTheDestroyer)
             {
-                if (IsEnabled(CustomComboPreset.MonkForbiddenChakraFeature) && gauge.Chakra == 5 && actionIDCD.IsCooldown && HasBattleTarget(true) && level >= 40)
+                if (IsEnabled(CustomComboPreset.MonkForbiddenChakraFeature) && gauge.Chakra == 5 && actionIDCD.CooldownRemaining > 0.5 && HasBattleTarget(true) && level >= 40)
                 {
                     return OriginalHook(MNK.Enlightenment);
                 }
@@ -183,6 +187,30 @@ namespace XIVSlothComboPlugin.Combos
         }
     }
 
+    internal class MnkTwinSnakesFeature : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MnkTwinSnakesFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == MNK.TrueStrike)
+            {
+                var disciplinedFistBuff = HasEffect(MNK.Buffs.DisciplinedFist);
+                var disciplinedFistDuration = FindEffect(MNK.Buffs.DisciplinedFist);
+
+                if (level >= MNK.Levels.TrueStrike)
+                {
+                    if ((!disciplinedFistBuff && level >= MNK.Levels.TwinSnakes) || (disciplinedFistDuration.RemainingTime < 6 && level >= MNK.Levels.TwinSnakes))
+                        return MNK.TwinSnakes;
+                    return MNK.TrueStrike;
+                }
+
+            }
+
+            return actionID;
+        }
+    }
+
     internal class MnkBasicCombo : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MnkBasicCombo;
@@ -242,6 +270,9 @@ namespace XIVSlothComboPlugin.Combos
                 var twinsnakeBuff = HasEffect(MNK.Buffs.DisciplinedFist);
                 var twinsnakeDuration = FindEffect(MNK.Buffs.DisciplinedFist);
                 var demolishDuration = FindTargetEffect(MNK.Debuffs.Demolish);
+                var RoFCD = GetCooldown(MNK.RiddleOfFire);
+                var RoWCD = GetCooldown(MNK.RiddleOfWind);
+                var BrotherhoodCD = GetCooldown(MNK.Brotherhood);
                 //Nadi
                 var pbStacks = FindEffectAny(MNK.Buffs.PerfectBalance);
                 var pbCD = GetCooldown(MNK.PerfectBalance);
@@ -250,7 +281,23 @@ namespace XIVSlothComboPlugin.Combos
                 var nadiNONE = gauge.Nadi == Nadi.NONE;
                 var actionIDCD = GetCooldown(actionID);
 
-                if (IsEnabled(CustomComboPreset.MonkForbiddenChakraFeature) && gauge.Chakra == 5 && actionIDCD.IsCooldown && level >= 15)
+                if (IsEnabled(CustomComboPreset.MnkMainComboBuffsFeature))
+                {
+
+                    if (HasEffect(MNK.Buffs.PerfectBalance) && actionIDCD.CooldownRemaining > 0.5 && !RoFCD.IsCooldown && level >= 68)
+                        return MNK.RiddleOfFire;
+                    if (HasEffect(MNK.Buffs.PerfectBalance) && actionIDCD.CooldownRemaining > 0.5 && !BrotherhoodCD.IsCooldown && HasEffect(MNK.Buffs.RiddleOfFire) && level >= 70)
+                        return MNK.Brotherhood;
+                }
+                if (IsEnabled(CustomComboPreset.MnkRiddleOfWindFeature))
+                {
+                    if (lastComboMove == MNK.TwinSnakes && actionIDCD.CooldownRemaining > 0.5 && !RoWCD.IsCooldown && level >= 72)
+                        return MNK.RiddleOfWind;
+                }
+
+                if (!HasEffect(MNK.Buffs.LeadenFist) && HasEffect(MNK.Buffs.OpoOpoForm) && level >= MNK.Levels.DragonKick)
+                    return MNK.DragonKick;
+                if (IsEnabled(CustomComboPreset.MonkForbiddenChakraFeature) && gauge.Chakra == 5 && actionIDCD.CooldownRemaining > 0.5 && level >= 15)
                 {
                     return OriginalHook(MNK.ForbiddenChakra);
                 }
@@ -304,8 +351,6 @@ namespace XIVSlothComboPlugin.Combos
                         if (pbStacks.StackCount == 1)
                             return MNK.Demolish;
                     }
-                    if (!HasEffect(MNK.Buffs.LeadenFist) && HasEffect(MNK.Buffs.OpoOpoForm) && level >= MNK.Levels.DragonKick)
-                        return MNK.DragonKick;
                 }
             }
             return actionID;
@@ -354,6 +399,29 @@ namespace XIVSlothComboPlugin.Combos
                         return MNK.Demolish;
                 }
 
+            }
+            return actionID;
+        }
+    }
+    internal class MnkRiddleOfFireBrotherhoodFeature : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MnkRiddleOfFireBrotherhoodFeature;
+        
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            var RoFCD = GetCooldown(MNK.RiddleOfFire);
+            var BrotherhoodCD = GetCooldown(MNK.Brotherhood);
+
+            if (actionID == MNK.RiddleOfFire)
+            {
+                if (level >= 68 && level < 70)
+                    return MNK.RiddleOfFire;
+                if (RoFCD.IsCooldown && BrotherhoodCD.IsCooldown && level >= 70)
+                    return MNK.RiddleOfFire;
+                if (RoFCD.IsCooldown && !BrotherhoodCD.IsCooldown && level >= 70)
+                    return MNK.Brotherhood;
+
+                return MNK.RiddleOfFire;
             }
             return actionID;
         }

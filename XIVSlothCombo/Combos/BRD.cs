@@ -168,7 +168,7 @@ namespace XIVSlothComboPlugin.Combos
 
                 if (HasEffect(BRD.Buffs.StraightShotReady))
                 {
-                    return BRD.RefulgentArrow;
+                    return (level >= BRD.Levels.RefulgentArrow) ? BRD.RefulgentArrow : BRD.StraightShot;
                 }
             }
 
@@ -405,7 +405,7 @@ namespace XIVSlothComboPlugin.Combos
 
                 var gauge = GetJobGauge<BRDGauge>();
                 var soulVoice = gauge.SoulVoice;
-                var heavyShotOnCooldown = GetCooldown(BRD.HeavyShot).CooldownRemaining > 0.7;
+                var heavyShotOnCooldown = CanWeave(BRD.HeavyShot);
 
                 if (heavyShotOnCooldown)
                 {
@@ -848,7 +848,7 @@ namespace XIVSlothComboPlugin.Combos
                 }
 
                 var heavyShot = GetCooldown(actionID);
-                var heavyShotOnCooldown = heavyShot.CooldownRemaining > 0.7;
+                var heavyShotOnCooldown = CanWeave(actionID);
                 var isEnemyHealthHigh = IsEnabled(CustomComboPreset.BardSimpleRaidMode) ? true : CustomCombo.EnemyHealthPercentage() > 1;
 
                 if (IsEnabled(CustomComboPreset.SimpleSongOption) && heavyShot.IsCooldown && isEnemyHealthHigh)
@@ -1024,10 +1024,10 @@ namespace XIVSlothComboPlugin.Combos
 
                         if (HasEffect(BRD.Buffs.StraightShotReady))
                         {
-                            return BRD.RefulgentArrow;
+                            return (level >= BRD.Levels.RefulgentArrow) ? BRD.RefulgentArrow : BRD.StraightShot;
                         }
 
-                        return BRD.BurstShot;
+                        return (level >= BRD.Levels.BurstShot) ? BRD.BurstShot : BRD.HeavyShot;
                     }
 
                     if (inCombat)
@@ -1054,10 +1054,10 @@ namespace XIVSlothComboPlugin.Combos
 
                 if (HasEffect(BRD.Buffs.StraightShotReady))
                 {
-                    return BRD.RefulgentArrow;
+                    return (level >= BRD.Levels.RefulgentArrow) ? BRD.RefulgentArrow : BRD.StraightShot;
                 }
 
-                return BRD.BurstShot;
+                return (level >= BRD.Levels.BurstShot) ? BRD.BurstShot : BRD.HeavyShot;
             }
 
             return actionID;

@@ -72,11 +72,14 @@ namespace XIVSlothComboPlugin.Combos
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            var gauge = GetJobGauge<WHMGauge>();
+            if(actionID == WHM.AfflatusSolace)
+            {
+                var gauge = GetJobGauge<WHMGauge>();
 
-            if (gauge.BloodLily == 3)
-                return WHM.AfflatusMisery;
+                if (gauge.BloodLily == 3)
+                    return WHM.AfflatusMisery;
 
+            }
             return actionID;
         }
     }
@@ -87,11 +90,14 @@ namespace XIVSlothComboPlugin.Combos
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            var gauge = GetJobGauge<WHMGauge>();
+            if (actionID == WHM.AfflatusRapture)
+            {
+                var gauge = GetJobGauge<WHMGauge>();
 
-            if (gauge.BloodLily == 3)
-                return WHM.AfflatusMisery;
+                if (gauge.BloodLily == 3)
+                    return WHM.AfflatusMisery;
 
+            }
             return actionID;
         }
     }
@@ -247,5 +253,26 @@ namespace XIVSlothComboPlugin.Combos
                 return actionID;
             }
         }
+
     }
+    internal class WHMAlternativeRaise : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WHMAlternativeRaise;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == WHM.Raise)
+            {
+                var thinairCD = GetCooldown(WHM.ThinAir);
+                if (IsEnabled(CustomComboPreset.WHMThinAirFeature) && !thinairCD.IsCooldown && HasEffect(WHM.Buffs.Swiftcast) && level >= 58)
+                    return WHM.ThinAir;
+                var swiftCD = GetCooldown(WHM.Swiftcast);
+                if ((swiftCD.CooldownRemaining == 0)
+)
+                    return WHM.Swiftcast;
+            }
+            return actionID;
+        }
+    }
+
 }

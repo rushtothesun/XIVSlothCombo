@@ -6,7 +6,6 @@ namespace XIVSlothComboPlugin.Combos
     {
         public const byte ClassID = 3;
         public const byte JobID = 21;
-
         public const uint
             HeavySwing = 31,
             Maim = 37,
@@ -21,6 +20,8 @@ namespace XIVSlothComboPlugin.Combos
             FellCleave = 3549,
             Decimate = 3550,
             Upheaval = 7387,
+            LowBlow = 7540,
+            Interject = 7538,
             InnerRelease = 8768,
             RawIntuition = 3551,
             MythrilTempest = 16462,
@@ -314,6 +315,23 @@ namespace XIVSlothComboPlugin.Combos
                     return WAR.FellCleave;
                 if (HasEffect(WAR.Buffs.NascentChaos))
                     return WAR.InnerChaos;
+            }
+
+            return actionID;
+        }
+    }
+    internal class WarriorInterruptFeature : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WarriorInterruptFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == WAR.LowBlow)
+            {
+                var interjectCD = GetCooldown(WAR.Interject);
+                var lowBlowCD = GetCooldown(WAR.LowBlow);
+                if (CanInterruptEnemy() && !interjectCD.IsCooldown)
+                    return WAR.Interject;
             }
 
             return actionID;
